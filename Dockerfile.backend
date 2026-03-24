@@ -1,0 +1,20 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files first for faster building
+COPY package*.json ./
+
+RUN npm install
+
+# Copy the backend code
+COPY nodeServer/ .
+
+# Copy frontend assets into the /app folder
+COPY index.html .
+COPY css/ ./css/
+COPY js/ ./js/
+
+EXPOSE 3000
+
+CMD ["node", "index.js"]
