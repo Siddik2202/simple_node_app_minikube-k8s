@@ -49,7 +49,8 @@ kubectl describe pod <pods_name>
 
 9. Why CrashLoopBackOff happens: Container starts → crashes → Kubernetes restarts → crashes again → loop
 	App error (code crash), DB connection failed, Wrong environment variables, Port already in use
-10. ImagePullBackOff error-
+
+11. ImagePullBackOff error-
 “It means Kubernetes cannot pull the image. I check if the image exists locally, verify image name, and ensure imagePullPolicy is set correctly. In Minikube, I build images inside its Docker environment.”
 
 THANK YOU
