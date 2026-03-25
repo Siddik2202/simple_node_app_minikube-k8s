@@ -1,4 +1,4 @@
-## Simple Node.Js App Deploy with k8s manifest files using minikube
+## Full Stack Simple Node.Js App Deploy with k8s manifest files using minikube
 
 1. Clone the project here we have all the files. Befor that you setup minikube 
 ```bash
