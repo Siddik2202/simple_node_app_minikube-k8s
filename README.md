@@ -1,4 +1,4 @@
-## This is simple node js app, 
+## This is simple node js app,  ok
 
 There Have a form and backend connection with mysql. 
 
