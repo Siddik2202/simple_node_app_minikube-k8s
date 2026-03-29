@@ -31,7 +31,8 @@ kubectl delete -f .  # to delete all k8s pods, svc, deployment
 ```bash
 kubectl exec -it <mysql-pod-name> -- bash
 mysql -u root -p -S /var/lib/mysql/mysql.sock
-# Then Enter your password
+# Then Enter your password for here password is root
+SHOW DATABASES; | use <database_name> | SHOW TABLES; | SELECT * FROM <table_name>;
 ```
 8. Some useful commands
 ```bash
