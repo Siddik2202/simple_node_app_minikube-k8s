@@ -13,18 +13,56 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: node-backend
-        imagePullPolicy: Never   # 🔥 ADD THIS
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DB_HOST
-          value: mysql
-        - name: DB_USER
-          value: root
-        - name: DB_PASSWORD
-          value: root
-        - name: DB_NAME
-          value: sampledb
+        - name: backend
+          image: node-backend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
 
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_HOST
+
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_USER
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_NAME
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+
+          # 🔥 ADD THIS PART
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
