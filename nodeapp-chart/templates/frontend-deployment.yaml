@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: frontend
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: node-frontend
-        imagePullPolicy: Never
+        image: {{ .Values.frontend.repository }}:{{ .Values.frontend.tag }}
+        imagePullPolicy:  {{ .Values.frontend.pullPolicy }}
         ports:
         - containerPort: 80

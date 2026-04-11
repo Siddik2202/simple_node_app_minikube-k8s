@@ -2,7 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myapp-ingress
+  namespace: {{ .Release.Namespace }}
 spec:
+  ingressClassName: nginx  # <--- ADD THIS LINE
   rules:
   - host: nodeapp.com
     http:

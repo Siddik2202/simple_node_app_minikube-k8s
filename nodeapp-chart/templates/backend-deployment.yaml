@@ -2,8 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: backend
@@ -14,55 +17,45 @@ spec:
     spec:
       containers:
         - name: backend
-          image: node-backend
-          imagePullPolicy: Never
+          image: {{ .Values.backend.repository }}:{{ .Values.backend.tag }}
+          imagePullPolicy: {{ .Values.backend.pullPolicy }}
           ports:
-            - containerPort: 3000
-          
+            - containerPort: 3000 # The port your backend app listens on inside the container
           resources:
-            requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
-              cpu: "200m"
-              memory: "256Mi"
-
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          # Env Variables
           env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: app-config
                   key: DB_HOST
-
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
                   name: app-config
                   key: DB_USER
-
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
                   name: app-config
                   key: DB_NAME
-
+            # 🔥 For passwords, store in Kubernetes Secrets
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: DB_PASSWORD
-
-          # 🔥 ADD THIS PART
+          # 🔥 Add health checks so Kubernetes knows when your app is healthy
           livenessProbe:
             httpGet:
-              path: /health
+              path: /health # Your backend should have a /health endpoint
               port: 3000
             initialDelaySeconds: 10
             periodSeconds: 10
-
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health # Your backend should have a /health endpoint
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 5
