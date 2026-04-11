@@ -15,11 +15,10 @@ spec:
             port:
               number: 80
 
-      - path: /api
+      - path: /submit
         pathType: Prefix
         backend:
           service:
             name: backend
             port:
               number: 3000
-

@@ -1,54 +1,82 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f0f4f8;
-  margin: 0;
-  padding: 0;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
-  max-width: 400px;
-  background: #fff;
-  padding: 2rem;
-  margin: 5rem auto;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg,#4facfe,#00f2fe);
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+.container{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.form-box {
-  display: flex;
-  flex-direction: column;
+.form-box{
+  background:white;
+  padding:40px;
+  width:350px;
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  text-align:center;
 }
 
-label {
-  margin-bottom: 0.5rem;
-  color: #555;
+.form-box h1{
+  color:#333;
+  margin-bottom:10px;
 }
 
-input {
-  padding: 0.7rem;
-  margin-bottom: 1.2rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
+.subtitle{
+  font-size:14px;
+  color:#666;
+  margin-bottom:25px;
 }
 
-button {
-  padding: 0.8rem;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
+label{
+  display:block;
+  text-align:left;
+  margin-top:10px;
+  font-weight:600;
 }
 
-button:hover {
-  background: #1e40af;
+input{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  transition:0.3s;
 }
+
+input:focus{
+  border-color:#4facfe;
+  outline:none;
+  box-shadow:0 0 5px rgba(79,172,254,0.4);
+}
+
+button{
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background: linear-gradient(135deg,#4facfe,#00c6ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background: linear-gradient(135deg,#00c6ff,#0072ff);
+  transform:scale(1.03);
+}
+

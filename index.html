@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CommuniCue - User Form</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CommuniCue - User Form</title>
 </head>
-<body>
-  <div class="container">
-    <h2>Welcome Synasys Software Solution</h2>
-    <form action="/submit" method="POST" class="form-box">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" required />
 
-      <label for="mobile">Mobile</label>
-      <input type="text" id="mobile" name="mobile" required />
+<body style="margin:0; font-family:Arial, sans-serif; background:linear-gradient(135deg,#4facfe,#00f2fe); height:100vh; display:flex; justify-content:center; align-items:center;">
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required />
+<div style="background:white; padding:40px; width:350px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.2); text-align:center;">
 
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+<h2 style="margin-bottom:10px; color:#333;">CommuniCue</h2>
+
+<p style="font-size:14px; color:#666; margin-bottom:25px;">
+Join our community and stay connected.  
+Share your details to get updates and opportunities.
+</p>
+
+<form action="/submit" method="POST">
+
+<label for="name" style="display:block; text-align:left; font-weight:bold; margin-top:10px;">Name</label>
+<input type="text" id="name" name="name" required
+style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc;">
+
+<label for="mobile" style="display:block; text-align:left; font-weight:bold; margin-top:15px;">Mobile</label>
+<input type="text" id="mobile" name="mobile" required
+style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc;">
+
+<label for="email" style="display:block; text-align:left; font-weight:bold; margin-top:15px;">Email</label>
+<input type="email" id="email" name="email" required
+style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc;">
+
+<button type="submit"
+style="width:100%; margin-top:20px; padding:12px; border:none; border-radius:6px; background:linear-gradient(135deg,#4facfe,#0072ff); color:white; font-size:16px; cursor:pointer;">
+Submit
+</button>
+
+</form>
+
+</div>
+
 </body>
 </html>

@@ -20,6 +20,10 @@ db.connect(err => {
   console.log('Connected to MySQL');
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
