@@ -1,226 +1,86 @@
-## This is simple node js app, 
+## Let's Extent the project of main branch to k8s-v2-without-helm.
 
-There Have a form and backend connection with mysql. 
-
-when You submit the form then the data will store in mysql db.
-
-### Here are the step to run on docker with EC2 instance server step by step withour docker compose
-
-1) Host a instance then clone you repository from your github using 
+1) Create ConfigMap and Secret: Used for non-sensitive configuration data where Secret Used for sensitive data like database username, password, API keys.
 
 ```bash
-sudo git clone https://github.com/Siddik2202/simple_node_app.git
+sudo git clone https://github.com/Siddik2202/simple_node_app.gits
 ```
 
-2) Create Dockerfile for your project. You get this from root folder. And run 
-```bash
-docker build -t simple-node-app .
-```
+2) Then we add Liveness and Readiness:
 
-3) After we need to run this image but make sure you connect with db there have many method to do that
-   
-   3.1) Create a network 1st to connect with db
-```bash
-docker network create simple-app-network
-```
-   
-   3.2) Using init.sql (Your Current Method) If you have 
-```bash
-   docker run -d --name db --network simple-app-network -e MYSQL_ROOT_PASSWORD=root -v $(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql -p 3306:3306 mysql:8
-```
-   3.3) Create Database Manually Inside Container. First start MySQL container:
-```bash
-docker run -d --name db -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 mysql:8
-```
-   Then enter under container ```  docker exec -it db mysql -u root -p  ```
-   And then you need to manually run SQL
-```bash
-CREATE DATABASE sampledb;
+Used to check if the application is still running or stuck. If the probe fails, Kubernetes restarts the container automatically.
 
-USE sampledb;
+Used to check if the application is ready to receive traffic. If it fails, Kubernetes removes the pod from the service load balancing until it becomes ready again.
 
-CREATE TABLE nodeuser (
-id INT AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(100),
-mobile VARCHAR(15),
-email VARCHAR(100)
-);
-```
-
-   3.4) Execute SQL File After Container Starts: Instead of mounting init.sql, you can run it later.
-```bash
-docker exec -i db mysql -u root -p sampledb < init.sql
-```
-
-   3.5 Application Creates Tables (Auto Migration) Your Node.js backend can create tables automatically.
-   When Node app starts -> Check if table exists -> Create if not
-   
-   3.6 Using Docker Compose (Most Used in DevOps. We also do this one the next step.
-
-Now I use method 1, After that your MySQL container start Attach to simple-app-network and automatically Run init.sql also Create database + table
-
-4. Then run your node container with network:
-   you cannot create another container with the same name, even if the existing container is Exited. If then remove ```bash
-   docker rm container-name
-```
-```bash
-docker run -d --name simple-node --network simple-app-network -p 3000:3000 simple-node-app
-```
-    
-5. So here we have three images where
-      node -> we don't run this image directly. It is only used to build your app image. (runtime environment)
-      simple-node-app -> Our Backend Application
-      mysql:8 -> This image runs the MySQL database server. Your Node backend connects to it using: db (database server)
-      Make sure you enable your port 22, 443, 80 and 3000
-
-6. To check data:
-```bash
-docker exec -it db mysql -u root -p
-# eneter passoword root and then 
-SHOW DATABASES;
-USE sampledb;
-SHOW TABLES;
-SELECT * FROM nodeuser;
-DESCRIBE nodeuser;
-```
-
-7. Now we will add volumn for data persistance. Create volumen then remove db and attach or run with volumn and you also need to restart your application container
-```bash
-docker volume create mysql-data
-docker rm -f db
-docker run -d --name db --network simple-app-network -e MYSQL_ROOT_PASSWORD=root -v mysql-data:/var/lib/mysql -v $(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql mysql:8
-
-# 2nd way to connect then 
-# cd ~/simple_node_app
-# mkdir mysql-data
-# -v ~/simple_node_app/mysql-data:/var/lib/mysql \
-
-# Now you get error because when you connect with new database you application attach with old
-docker restart simple-node
-# Now works fine
-```
-8. Now you can check
-```bash
-docker volume inspect mysql-data
-# here you will see a Mountpoint
-sudo -i
-cd /var/lib/docker/volumes/mysql-data/_data
-# here you can see ibdata1, etc... 
-```
-Thank you
-
-
-### Here we will deploy our EC2 instance with docker compose
-
-i) It's better to use docker-compose other you need to run seperately db and app after you create docker images. 
-
-ii) So 1st Install dependency's and update configuration 
+We add a health check API in the application so Kubernetes can monitor the service on index.js
 
 ```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y docker.io docker-compose   # for installing both 
-sudo systemctl enable --now docker
-sudo systemctl start docker
-sudo usermod -aG docker $USER && newgrp docker 
-docker --version
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 ```
-iii) Set up your project using git and redirect
+3) Add Persistent Volume (PV) and Persistent Volume Claim (PVC):
+By default, Kubernetes pod storage is temporary. If the MySQL pod is deleted or restarted, all database data will be lost ❌.
+
+Persistent Volume (PV) → Actual storage in the cluster.
+Persistent Volume Claim (PVC) → Request for storage by the pod.
+
 ```bash
-git clone https://github.com/Siddik2202/simple_node_app.git
-cd <project> 
+kubectl apply -f pv.yaml
+kubectl apply -f pvc.yaml
 ```
-   
-iv) Run this command it will build and run container. All the method and steps (network, volume, db & app) are written here.
+4) Use Ingress Instead of LoadBalancer:
+
+LoadBalancer services require cloud provider integration and a public IP, which Minikube does not provide by default. For testing, we can use minikube tunnel, but it is not ideal for local development.
+
+So we used Ingress, which allows us to route external traffic to services using a single entry point and custom domain.
+
+   Ingress → Defines routing rules (host, path) to access services.
+   Ingress Controller → The component that implements and manages those rules (e.g., Nginx Ingress Controller).
+
 ```bash
-docker-compose up -d --build 
+kubectl apply -f ingress.yaml
+sudo nano /etc/hosts
 ```
-v) you should enable your project port and mysql port. For that you should enable 3000 (from app) and 8080 (alternative port of http 80 for docker container) port .
+5) Then we worked on autoscaling 
 
-vi) Here we use healthcheck for avoing error Econnrefused Error, means app run befor db or mysql ready.
+   Resource Limits: Used to protect cluster resources by limiting how much CPU and memory a container can use. This prevents one pod from consuming all system resources.
+   Horizontal Pod Autoscaler (HPA): HPA automatically scales the number of pods up or down based on CPU or memory usage.
+      Note: HPA works properly when resource requests and limits are defined.
+   Vertical Pod Autoscaler (VPA): Used when a pod needs more CPU or RAM instead of more pods. VPA automatically adjusts the resource requests of the pod.
 
-vii) If You can see your data d
+Then create a separate hpa.yaml file to define autoscaling configuration which have hpa.yaml file.
+
 ```bash
-docker exec -it 1a2096dc32ec <mysql container id> mysql -u siddik -p then enter password
-SHOW DATABASES; USE sampledb; SHOW TABLES; SELECT * FROM your_table;  #You can see your data.
+kubectl apply -f hpa.yaml
+kubectl get hpa
+kubectl top pods # To understand cpu of pods
 ```
 
-THANK YOU
- 
- 
-### Full Stack Node app deploy with CICD Approach with help of docker compose
+6) Generate Load for Testing: To test autoscaling, create a temporary load generator pod.
 
-#### 1. 1st of all set up agent node from master beacuse jenkins work as a master-slave architechture.
+```bahs
+kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh
+while true; do wget -q -O- http://backend:3000; done 
+```
 
-#### 2. Create a pipeline project select option of 'github project' and enter url. Also select 'GitHub hook trigger for GITScm polling'
+7. Use Namespace: Namespaces help organize and isolate resources in Kubernetes (e.g., dev, test, prod environments).
 
-#### 3. Go to you repository -> setting -> add webhooks.
-
-#### 4. Make sure you enable port(3000) according to your peoject, install docker, docker compose and enable ubuntu as a username because you you agent username is ubuntu
 ```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y docker.io docker-compose
-sudo usermod -aG docker ubuntu
-
-# If required to restart
-java -jar remoting.jar
-pkill -f remoting.jar
-java -jar remoting.jar -workDir /home/ubuntu
-# To verify use docker ps
+kubectl create namespace dev
+# To avoid writing -n dev in every command, set it as the default namespace. It also help when we use 'Argo CD'
+kubectl config set-context --current --namespace=dev 
 ```
 
-#### 5. For better view you can install avilable plugins like pipeline:stageview, GitHub Plugin from jenkins and restart.
+8. Use secretKeyRef and configMapKeyRef in development yaml files.
 
-#### 6. Now add pipeline groovy syntax and then save and contitune again select label name according to your agent label name.
-```bash
-pipeline {
-    agent { label 'agent' } // Jenkins agent/slave label
-    
-    environment {
-        IMAGE_NAME = "simple_node_app"
-        IMAGE_TAG = "latest"
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Siddik2202/simple_node_app.git'
-            }
-        }
-        stage('Build App Image') {
-            steps {
-                script {
-                    // Build the Docker image from local Dockerfile
-                    sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
-                }
-            }
-        }
+secretKeyRef → Used when the value comes from a Kubernetes Secret (sensitive data like passwords).
 
-        stage('Deploy with Docker Compose') {
-            steps {
-                script {
-                    // Stop old containers if running
-                    sh 'docker-compose down || true'
-                    // Start containers in detached mode
-                    sh 'docker-compose up -d --build'
-                }
-            }
-        }
-    }
-    post {
-        success {
-            echo '✅ Deployment successful!'
-        }
-        failure {
-            echo '❌ Deployment failed!'
-        }
-    }
-}
-```
+configMapKeyRef → Used when the value comes from a ConfigMap (non-sensitive configuration).
 
-#### 7. Now If you want to see you backend data on ec2 then 
-```bash
-docker exec -it mysql_container_name<pipelineproject_db_1> mysql -u root -p # you can check through docker ps
-# Then enter password and use mysql command to view
-# Docker Compose automatically creates container names like: <folder_name>_<service_name>_<number>
-```
 
-THANK YOU SO MUCH !
+
+
+
+
+
