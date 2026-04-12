@@ -43,8 +43,6 @@ helm rollback my-app 1
 ```
 
 2. Logging & Monitoring: 
-To maintain production-grade systems, we implement observability.
-Monitoring: Tracks system health and metrics such as: CPU usage, Memory usage, Pod performance by Prometheus
-So we Install Prometheus using Helm repository 
-
-4. 
+* To maintain production-grade systems, we implement observability.
+* Monitoring: Tracks system health and metrics such as: CPU usage, Memory usage, Pod performance by Prometheus
+* So we Install Prometheus using Helm repository.
