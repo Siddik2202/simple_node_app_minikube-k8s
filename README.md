@@ -42,7 +42,7 @@ helm uninstall my-app
 helm rollback my-app 1
 ```
 
-2. Logging & Monitoring: 
+2. Logging & Monitoring: (1860/ 15757/ 1860)
 * To maintain production-grade systems, we implement observability.
 * Monitoring: Tracks system health and metrics such as: CPU usage, Memory usage, Pod performance by Prometheus
 * So we Install Prometheus using Helm repository.
