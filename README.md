@@ -8,11 +8,11 @@ sudo git clone https://github.com/Siddik2202/simple_node_app.gits
 
 2) Then we add Liveness and Readiness:
 
-Used to check if the application is still running or stuck. If the probe fails, Kubernetes restarts the container automatically.
+    * Used to check if the application is still running or stuck. If the probe fails, Kubernetes restarts the container automatically.
 
-Used to check if the application is ready to receive traffic. If it fails, Kubernetes removes the pod from the service load balancing until it becomes ready again.
+    * Used to check if the application is ready to receive traffic. If it fails, Kubernetes removes the pod from the service load balancing until it becomes ready again.
 
-We add a health check API in the application so Kubernetes can monitor the service on index.js
+  We add a health check API in the application so Kubernetes can monitor the service on index.js
 
 ```bash
 app.get('/health', (req, res) => {
