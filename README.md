@@ -21,7 +21,7 @@ app.get('/health', (req, res) => {
 ```
 3) Add Persistent Volume (PV) and Persistent Volume Claim (PVC):
 
-default, Kubernetes pod storage is temporary. If the MySQL pod is deleted or restarted, all database data will be lost ❌.
+   Byfault, Kubernetes pod storage is temporary. If the MySQL pod is deleted or restarted, all database data will be lost ❌.
 
    * Persistent Volume (PV) → Actual storage in the cluster.
    * Persistent Volume Claim (PVC) → Request for storage by the pod.
