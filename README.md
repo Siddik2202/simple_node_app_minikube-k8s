@@ -18,9 +18,9 @@ app.get('/health', (req, res) => {
 ```
 3) Add Persistent Volume (PV) and Persistent Volume Claim (PVC):
 
-   Byfault, Kubernetes pod storage is temporary. If the MySQL pod is deleted or restarted, all database data will be lost ❌.
-   * Persistent Volume (PV) → Actual storage in the cluster.
-   * Persistent Volume Claim (PVC) → Request for storage by the pod.
+Byfault, Kubernetes pod storage is temporary. If the MySQL pod is deleted or restarted, all database data will be lost ❌.
+* Persistent Volume (PV) → Actual storage in the cluster.
+* Persistent Volume Claim (PVC) → Request for storage by the pod.
 ```bash
 kubectl apply -f pv.yaml
 kubectl apply -f pvc.yaml
@@ -62,8 +62,8 @@ kubectl create namespace dev
 kubectl config set-context --current --namespace=dev 
 ```
 8. Use secretKeyRef and configMapKeyRef in development yaml files.
-   * secretKeyRef → Used when the value comes from a Kubernetes Secret (sensitive data like passwords).
-   * configMapKeyRef → Used when the value comes from a ConfigMap (non-sensitive configuration).
+* secretKeyRef → Used when the value comes from a Kubernetes Secret (sensitive data like passwords).
+* configMapKeyRef → Used when the value comes from a ConfigMap (non-sensitive configuration).
 
 
 
