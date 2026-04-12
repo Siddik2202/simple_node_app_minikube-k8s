@@ -1,7 +1,6 @@
 ## Let's Extent the project of main branch to k8s-v2-without-helm.
 
 1) Create ConfigMap and Secret: Used for non-sensitive configuration data where Secret Used for sensitive data like database username, password, API keys.
-
 ```bash
 sudo git clone https://github.com/Siddik2202/simple_node_app.gits
 ```
@@ -13,7 +12,6 @@ sudo git clone https://github.com/Siddik2202/simple_node_app.gits
     * Used to check if the application is ready to receive traffic. If it fails, Kubernetes removes the pod from the service load balancing until it becomes ready again.
 
   We add a health check API in the application so Kubernetes can monitor the service on index.js
-
 ```bash
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
@@ -25,7 +23,6 @@ app.get('/health', (req, res) => {
 
    * Persistent Volume (PV) → Actual storage in the cluster.
    * Persistent Volume Claim (PVC) → Request for storage by the pod.
-
 ```bash
 kubectl apply -f pv.yaml
 kubectl apply -f pvc.yaml
@@ -38,20 +35,19 @@ So we used Ingress, which allows us to route external traffic to services using 
 
    Ingress → Defines routing rules (host, path) to access services.
    Ingress Controller → The component that implements and manages those rules (e.g., Nginx Ingress Controller).
-
 ```bash
 kubectl apply -f ingress.yaml
 sudo nano /etc/hosts
 ```
 5) Then we worked on autoscaling 
 
-   Resource Limits: Used to protect cluster resources by limiting how much CPU and memory a container can use. This prevents one pod from consuming all system resources.
-   Horizontal Pod Autoscaler (HPA): HPA automatically scales the number of pods up or down based on CPU or memory usage.
-      Note: HPA works properly when resource requests and limits are defined.
-   Vertical Pod Autoscaler (VPA): Used when a pod needs more CPU or RAM instead of more pods. VPA automatically adjusts the resource requests of the pod.
+   * Resource Limits: Used to protect cluster resources by limiting how much CPU and memory a container can use. This prevents one pod from consuming all system resources.
 
-Then create a separate hpa.yaml file to define autoscaling configuration which have hpa.yaml file.
+   * Horizontal Pod Autoscaler (HPA): HPA automatically scales the number of pods up or down based on CPU or memory usage.
+      * Note: HPA works properly when resource requests and limits are defined.
+   * Vertical Pod Autoscaler (VPA): Used when a pod needs more CPU or RAM instead of more pods. VPA automatically adjusts the resource requests of the pod.
 
+   Then create a separate hpa.yaml file to define autoscaling configuration which have hpa.yaml file.
 ```bash
 kubectl apply -f hpa.yaml
 kubectl get hpa
@@ -59,7 +55,6 @@ kubectl top pods # To understand cpu of pods
 ```
 
 6) Generate Load for Testing: To test autoscaling, create a temporary load generator pod.
-
 ```bahs
 kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh
 while true; do wget -q -O- http://backend:3000; done 
@@ -72,12 +67,10 @@ kubectl create namespace dev
 # To avoid writing -n dev in every command, set it as the default namespace. It also help when we use 'Argo CD'
 kubectl config set-context --current --namespace=dev 
 ```
-
 8. Use secretKeyRef and configMapKeyRef in development yaml files.
 
-secretKeyRef → Used when the value comes from a Kubernetes Secret (sensitive data like passwords).
-
-configMapKeyRef → Used when the value comes from a ConfigMap (non-sensitive configuration).
+   * secretKeyRef → Used when the value comes from a Kubernetes Secret (sensitive data like passwords).
+   * configMapKeyRef → Used when the value comes from a ConfigMap (non-sensitive configuration).
 
 
 
