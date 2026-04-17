@@ -1,4 +1,5 @@
 ## Let's Extent the project of main branch to k8s-v2-without-helm.
+### So Here we just add advanced features to make more productive level.
 
 1) Create ConfigMap and Secret: Used for non-sensitive configuration data where Secret Used for sensitive data like database username, password, API keys.
 ```bash
