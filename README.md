@@ -23,7 +23,7 @@ mv k8s/*.yaml nodeapp-chart/templates/
 # "nodeapp" is the release name and "./nodeapp-chart" is the chart path
 helm install nodeapp ./nodeapp-chart
 
-
+# Extra Command which used day to day life basis.
 # Install a Helm chart into the Kubernetes cluster
 # Creates a new release with the name "my-app"
 helm install my-app ./chart
