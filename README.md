@@ -19,7 +19,12 @@ helm version
 5. Install NGINX Ingress Controller: Used to expose services via domain-based routing.
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
-kubectl get pods -n ingress-nginx
+#   kubectl get pods -n ingress-nginx    # To check
+#   kubectl get pods -n ingress-nginx -w
+
+#   kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+#   kubectl delete namespace ingress-nginx
+#   kubectl get ns
 ```
 
 6. Then we all have project means we set up and create helm repo, docker files.
