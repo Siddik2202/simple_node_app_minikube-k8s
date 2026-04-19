@@ -53,6 +53,7 @@ cd nodeapp-chart
 helm install nodeapp .
 helm list      # To check release list
 helm upgrade nodeapp .   # Upgrade when needed:
+helm uninstall nodeapp    # To delete
 ```
 
 9. Install Monitoring Stack
