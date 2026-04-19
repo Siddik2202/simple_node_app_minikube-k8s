@@ -16,9 +16,13 @@ const db = mysql.createConnection({
 
 
 db.connect(err => {
-  if (err) throw err;
-  console.log('Connected to MySQL');
+  if (err) {
+    console.error('DB connection failed:', err.message);
+  } else {
+    console.log('Connected to MySQL');
+  }
 });
+
 
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
