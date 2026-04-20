@@ -35,14 +35,27 @@ pipeline {
             }
         }
 
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+        //             // Use single quotes (') for the shell command to handle the secret safely
+        //             sh 'helm upgrade --install nodeapp ./nodeapp-chart --kubeconfig $KUBECONFIG_FILE'
+        //         }
+        //     }
+        // }
         stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
-                    // Use single quotes (') for the shell command to handle the secret safely
-                    sh 'helm upgrade --install nodeapp ./nodeapp-chart --kubeconfig $KUBECONFIG_FILE'
-                }
+        steps {
+            withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                // Helm upgrade command
+                // Note: Hum tag ko explicitly 'latest' bhej rahe hain taaki Helm refresh ho
+                sh "helm upgrade --install nodeapp ./nodeapp-chart \
+                    --set frontend.tag=latest \
+                    --set backend.tag=latest \
+                    --kubeconfig ${KUBECONFIG_FILE}"
             }
         }
+    }
+
         
     }
 
