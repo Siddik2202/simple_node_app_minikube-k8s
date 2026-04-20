@@ -37,12 +37,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                // Using 'k8s-config' ID from your screenshot
                 withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
-                    sh "helm upgrade --install nodeapp ./nodeapp-chart --kubeconfig ${KUBECONFIG_FILE}"
+                    // Use single quotes (') for the shell command to handle the secret safely
+                    sh 'helm upgrade --install nodeapp ./nodeapp-chart --kubeconfig $KUBECONFIG_FILE'
                 }
             }
         }
+        
     }
 
     post {
