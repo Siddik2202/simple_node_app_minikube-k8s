@@ -9,12 +9,17 @@ spec:
       app: frontend
   template:
     metadata:
+      # --- YEH SECTION ADD KAREIN ---
+      annotations:
+        # Isse har baar YAML change hoga aur K8s naya code pull karega
+        rollout-restartTime: {{ now | quote }}
+      # ------------------------------
       labels:
         app: frontend
     spec:
       containers:
       - name: frontend
         image: {{ .Values.frontend.repository }}:{{ .Values.frontend.tag }}
-        imagePullPolicy:  {{ .Values.frontend.pullPolicy }}
+        imagePullPolicy: {{ .Values.frontend.pullPolicy }}
         ports:
         - containerPort: 80
