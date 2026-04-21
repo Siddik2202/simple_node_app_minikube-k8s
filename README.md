@@ -153,30 +153,30 @@ sudo apt install curl -y
 
 5. Add Credentials in Jenkins. Manage Jenkins → Credentials → Global → Add Credentials
       * DockerHub
-         a) Kind: Username & Password
-         b) ID: dockerhub-cred
-         c) Here you just set you dockerhub username and access token. You can create from Dockerhub
+           * a) Kind: Username & Password
+           * b) ID: dockerhub-cred
+           * c) Here you just set you dockerhub username and access token. You can create from Dockerhub
       * GitHub
-         a) Use Personal Access Token
-         b) ID: github-cred
-         c) Here also you need to set you github access token. You can create from github -> profile seeting -> Developer setting
+           * a) Use Personal Access Token
+           * b) ID: github-cred
+           * c) Here also you need to set you github access token. You can create from github -> profile seeting -> Developer setting
       ** This is very mandotary, Go to your control panel or Master Node
            * a) ```bash cat ~/.kube/config ```
            * b) Now copy whole page and pest on a file.
-         c) Now Go To Manage Jenkins → Clouds → Add New Cloud → Kubernetes
-         d) Kubernetes Name: k8s-cluster
-         e) Kubernetes URL: https://<EC2-1(master)-PRIVATE-IP>:6443
-         f) Kubernetes Namespace: default
-         g) Credentials: Select file you create.
-         h) WebSocket: ✅ Check this box
-         i) Disable HTTPS certificate check: ✅
-         j) Then Test Connection: If Successful: It will show Connected to Kubernetes <version>.
+           * c) Now Go To Manage Jenkins → Clouds → Add New Cloud → Kubernetes
+           * d) Kubernetes Name: k8s-cluster
+           * e) Kubernetes URL: https://<EC2-1(master)-PRIVATE-IP>:6443
+           * f) Kubernetes Namespace: default
+           * g) Credentials: Select file you create.
+           * h) WebSocket: ✅ Check this box
+           * i) Disable HTTPS certificate check: ✅
+           * j) Then Test Connection: If Successful: It will show Connected to Kubernetes <version>.
 
-         k) Pod Template Name: jenkins-agent
-         l) Usage: Use this node as much as possible
-         m) Labels: jenkins-agent (This is the label you will use in your Jenkinsfile like agent { label 'jenkins-agent' }).
-         n) Jenkins Tunnel: <EC2-3-PRIVATE-IP>:50000 # If have
-         o) Container: jnlp | jenkins/inbound-agent (Image) | /home/jenkins/agent (Working Dir)
+           * k) Pod Template Name: jenkins-agent
+           * l) Usage: Use this node as much as possible
+           * m) Labels: jenkins-agent (This is the label you will use in your Jenkinsfile like agent { label 'jenkins-agent' }).
+           * n) Jenkins Tunnel: <EC2-3-PRIVATE-IP>:50000 # If have
+           * o) Container: jnlp | jenkins/inbound-agent (Image) | /home/jenkins/agent (Working Dir)
 
 6. Create Your First Pipeline Job with Name.
       * Just select GitHub hook trigger for GITScm polling
