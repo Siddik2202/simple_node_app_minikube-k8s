@@ -186,15 +186,16 @@ sudo apt install curl -y
       * Branch: main # According to you
       * Script Path: Jenkinsfile   # It means Jenkinsfile should be exist in your remo with that name.
 
+7. Now build your Job I hope It succesffuly Deploy with stages.
 
-7. You can add webhook so it automatically build if any push or commit on your remository.
+8. You can add webhook so it automatically build if any push or commit on your remository.
    ```bash
    # http://<jenkins-server-PUBLIC-IP>:8080/github-webhook/
    # Content type: application/json
    # Just the push event
    ```
 
-8. Docker :latest Tag Caching (90% ).
+9. Docker :latest Tag Caching (90% ).
       * So we need to use imagePullPolicy: Always & rollout-date/rollout-restartTime in deployment.
       * Apply new changes without downtime, Kubernetes creates new pods with updated config & Old pods are terminated gradually
       ```bash
