@@ -66,8 +66,9 @@ helm upgrade --install nodeapp .   # 👉 idempotent command (safe to run anytim
 helm uninstall nodeapp    # To delete
 ```
 
-9. If you get error regurding below They run only. 
+9. If you get any error regurding below points then only run. 
       * MTU (Maximum Transmission Unit): In AWS, standard MTU = 1500 bytes, Calico adds extra data, making packets bigger than AWS limit, so packets can fail to travel properly. Original data = 1500 bytes (already full tunnel size), Calico adds extra = +50 bytes. So total becomes 1550 bytes. 
+
 ```bash
 kubectl patch installation.operator.tigera.io default --type merge -p '{"spec": {"calicoNetwork": {"mtu": 1440}}}'
 kubectl delete pods -n calico-system --all    # To apply above new rules 
@@ -132,13 +133,7 @@ Thank you So Much. Developed by Abu Bakkar Siddik
 
 2. Now Install Jenkins setup on ec2 server and Launch with 8080 port. I assumed you know how to launch and setup Jenkins.
 
-3. Install Required Plugins from Manage Jenkins → Plugins → Available Plugins -> Install:
-      ✔️ Git
-      ✔️ Pipeline
-      ✔️ Docker Pipeline
-      ✔️ Credentials Binding
-      ✔️ SSH Agent
-      ✔️ (Later) Kubernetes plugin
+3. Install Required Plugins from Manage Jenkins → Plugins → Available Plugins -> Install: ✔️ Git ✔️ Pipeline ✔️ Docker Pipeline ✔️ Credentials Binding ✔️ SSH Agent ✔️ (Later) Kubernetes plugin
 
 4. Now ssh this server and Install Docker (MANDATORY), Jenkins will fail without this.
 ```bash
@@ -152,10 +147,8 @@ sudo systemctl restart jenkins
 sudo apt install git -y
 sudo apt install curl -y
 
-# Install helm and kubectl 
-
+# Install helm and kubectl
 # kubectl get pods -o wide    # Get more detailed information about Pods
-
 ```
 
 5. Add Credentials in Jenkins. Manage Jenkins → Credentials → Global → Add Credentials
@@ -168,8 +161,8 @@ sudo apt install curl -y
          b) ID: github-cred
          c) Here also you need to set you github access token. You can create from github -> profile seeting -> Developer setting
       ** This is very mandotary, Go to your control panel or Master Node
-         a) ```bash cat ~/.kube/config ```
-         b) Now copy whole page and pest on a file.
+           * a) ```bash cat ~/.kube/config ```
+           * b) Now copy whole page and pest on a file.
          c) Now Go To Manage Jenkins → Clouds → Add New Cloud → Kubernetes
          d) Kubernetes Name: k8s-cluster
          e) Kubernetes URL: https://<EC2-1(master)-PRIVATE-IP>:6443
